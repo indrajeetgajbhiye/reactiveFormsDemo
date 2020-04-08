@@ -1,0 +1,99 @@
+<form [formGroup]="survey" novalidate (ngSubmit)="onSubmit(survey)" class="container">
+    <div formArrayName="sections" class='container-fluid'>
+        <h4 class="ui header">Section Details</h4>
+        <div class="section" *ngFor="let section of getFieldGeneric(survey, 'sections'); let i = index">
+            <div class="ui raised segments" [formGroupName]="i">
+                <div class="col-md-4  no-padding-margin-left">
+                    <input type="text" class="form-control no-padding-margin-left padding-left smooth-borders layout-margin" placeholder="Untitled form" formControlName="sectionTitle">
+                </div>
+                <div class="questions layout-margin" formArrayName="questions">
+                    <div [formGroupName]="j" *ngFor="let question of getFieldGeneric(section, 'questions'); let j = index">
+                        <div class="row col-md-12 ">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-primary" type="button">Question</button>
+                                    </div>
+                                    <input type="text" placeholder="Untitled Question" class="form-control-lg" formControlName="questionTitle" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <select formControlName="questionType" class="form-control">
+                                    <option class="form-control">CNA</option>
+                                    <option class="form-control">C+</option>
+                                    <option class="form-control">CA</option>
+
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button (click)="removeChildGeneric( ['sections', i, 'questions'], k)" class="btn btn-outline-danger"><i
+                                        class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="childQuestion layout-margin" formArrayName="childQuestions">
+                            <div [formGroupName]='k' *ngFor="let childQuestion of getFieldGeneric(question, 'childQuestions'); let k = index">
+                                <div class="row col-md-12 ">
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-outline-secondary " type="button">Child</button>
+                                            </div>
+                                            <input type="text" placeholder="untitled child" class="form-control" formControlName='childQuestionTitle' class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select formControlName="childQuestionType" class="form-control">
+                                                <option class="form-control">CNA</option>
+                                                <option class="form-control">C+</option>
+                                                <option class="form-control">CA</option>
+
+                                            </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button (click)="removeChildGeneric( ['sections', i, 'questions', j, 'childQuestions'], j)" class="btn btn-outline-danger"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div class="grandChildQuestions layout-margin" formArrayName="grandChildQuestions">
+                                    <div [formGroupName]='l' *ngFor="let grandChildQuestion of getFieldGeneric(childQuestion, 'grandChildQuestions'); let l = index">
+                                        <div class="row col-md-12 padding-bottom">
+                                            <div class="col-md-8">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-outline-info" type="button">Grandchild</button>
+                                                    </div>
+                                                    <input type="text" class="form-control" placeholder="untitled grand child" formControlName='grandChildQuestionTitle' class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <select formControlName="grandChildQuestionType" class="form-control">
+                                                        <option class="form-control">CNA</option>
+                                                        <option class="form-control">C+</option>
+                                                        <option class="form-control">CA</option>
+
+                                                    </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button (click)="removeChildGeneric( ['sections', i, 'questions', j, 'childQuestions', k, 'grandChildQuestions'], k)" class="btn btn-outline-danger"><i
+                                                            class="fa fa-times"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button (click)="addChildGeneric(['sections', i, 'questions', j, 'childQuestions', k, 'grandChildQuestions'], initGrandChildQuestion)" class="btn btn-info btn-margin">Add Grand
+                                            child</button>
+                                </div>
+                            </div>
+
+                            <button (click)="addChildGeneric(['sections', i, 'questions', j, 'childQuestions'], initChildQuestion)" class="btn btn-secondary btn-margin">Add Child
+                                Question...</button>
+                        </div>
+                    </div>
+                    <button (click)="addChildGeneric(['sections', i, 'questions'], initQuestion)" class="btn btn-primary btn-margin">Add Question...</button>
+                </div>
+            </div>
+            <button *ngIf="getFieldGeneric(survey, 'sections').length > 1" (click)="removeChildGeneric(['sections'],i)" class="btn btn-outline-warning btn-margin remove-section">Remove Section</button>
+        </div>
+    </div>
+    <br>
+    <button (click)="addChildGeneric(['sections'], initSection)" class="btn btn-warning btn-margin">Add Section </button>
+</form>
+<pre> {{survey.value | json}} </pre>
